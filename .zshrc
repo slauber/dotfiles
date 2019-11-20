@@ -41,3 +41,5 @@ installdeb() {
 
 export HISTSIZE=10000
 export HISTFILESIZE=""
+
+. "/root/.acme.sh/acme.sh.env"
