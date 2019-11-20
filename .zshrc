@@ -18,5 +18,26 @@ zle -N down-line-or-beginning-search
 [[ -n "${key[Up]}" ]] && bindkey "${key[Up]}" up-line-or-beginning-search
 [[ -n "${key[Down]}" ]] && bindkey "${key[Down]}" down-line-or-beginning-search
 
+# Gets the download url for the latest release of a package provided via GitHub Releases
+# Usage: ghrelease USER REPO [PATTERN]
+ghrelease() {
+	curl -s "https://api.github.com/repos/$1/$2/releases/latest" | grep -o "http.*${3:-deb}"
+}
+
+# Installs a local or remote(http/https) deb package and removes it after installation
+installdeb() {
+	set -e
+	loc="/tmp/install.deb"
+	case $1 in 
+	http*) sudo wget -O "$loc" $1;;
+	*) loc="$1"
+	esac
+	sudo dpkg -i "$loc"
+	sudo apt -f install
+	sudo rm -f "$loc"
+}
+
+
+
 export HISTSIZE=10000
 export HISTFILESIZE=""
